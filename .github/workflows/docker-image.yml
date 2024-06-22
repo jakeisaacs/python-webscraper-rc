@@ -1,10 +1,6 @@
 name: Docker Build & Run
 
 on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
   schedule:
     - cron: '0 11,23 * * *'
 
@@ -26,7 +22,22 @@ jobs:
         echo MAIL_PASSWORD=${{ vars.MAIL_PASSWORD }} >> .env
         echo MAIL_SENDER=${{ vars.MAIL_SENDER }} >> .env
         echo MAIL_RECIPIENTS=${{ vars.MAIL_RECIPIENTS }} >> .env
+    - name: Create volume
+      run: docker volume create app_data
     - name: Build the Docker image
       run: docker build -t jkaisix/rc-webscraper .
     - name: Run container
-      run: docker run --env-file .env jkaisix/rc-webscraper
+      run: docker run --env-file .env -v app_data:/app jkaisix/rc-webscraper
+    - name: Run container (interactive)
+      run: docker run -d -it -v app_data:/app jkaisix/rc-webscraper sh
+    - name: Get data from Docker container
+      run: |
+        docker cp $(docker ps --latest -q):/app/rc_log.txt .
+        docker cp $(docker ps --latest -q):/app/rc_prices.csv .
+    - name: commit
+      run: |
+      git config user.name "github-actions"
+      git config user.email "<>"
+      git add rc_log.txt rc_prices.csv
+      git commit -m "Updating rc files..."
+      git push
