@@ -27,6 +27,6 @@ jobs:
         echo MAIL_SENDER=${{ vars.MAIL_SENDER }} >> .env
         echo MAIL_RECIPIENTS=${{ vars.MAIL_RECIPIENTS }} >> .env
     - name: Build the Docker image
-      run: docker build -t jkaisix/rc-webscraper
+      run: docker build -t jkaisix/rc-webscraper .
     - name: Run container
       run: docker run --env-file .env jkaisix/rc-webscraper
