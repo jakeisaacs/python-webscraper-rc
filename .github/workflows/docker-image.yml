@@ -36,8 +36,8 @@ jobs:
         docker cp $(docker ps --latest -q):/app/rc_prices.csv .
     - name: commit
       run: |
-      git config user.name "github-actions"
-      git config user.email "<>"
-      git add rc_log.txt rc_prices.csv
-      git commit -m "Updating rc files..."
-      git push
+        git config user.name "github-actions"
+        git config user.email "<>"
+        git add rc_log.txt rc_prices.csv
+        git commit -m "Updating rc files..."
+        git push
