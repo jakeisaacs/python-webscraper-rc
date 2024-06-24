@@ -1,4 +1,4 @@
-rname: Docker Build & Run
+name: Docker Build & Run
 
 on:
   schedule:
